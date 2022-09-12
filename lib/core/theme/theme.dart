@@ -6,29 +6,24 @@ class Themes {
       scaffoldBackgroundColor: const Color(0xFFF6F6F6),
       fontFamily: "Montserrat",
       appBarTheme: const AppBarTheme(
-          backgroundColor: Colors.transparent,
-          shadowColor: Colors.transparent,
-          iconTheme: IconThemeData(color: Color(0xFF04566E))),
+          elevation: 10,
+          backgroundColor: Colors.white,
+          shadowColor: Colors.black,
+          iconTheme: IconThemeData(color: appMainColor)),
       textTheme: const TextTheme(
         headline1: TextStyle(
-            color: Color(0xFF04566E),
-            fontWeight: FontWeight.w600,
-            fontSize: 20),
+            color: appMainColor, fontWeight: FontWeight.w600, fontSize: 20),
         headline2: TextStyle(
-            color: Color(0xFF04566E),
-            fontWeight: FontWeight.w600,
-            fontSize: 15),
+            color: Colors.white, fontWeight: FontWeight.w600, fontSize: 18),
         bodyText1: TextStyle(
-            color: Colors.black, fontWeight: FontWeight.w400, fontSize: 15),
+            color: appMainColor, fontWeight: FontWeight.w400, fontSize: 17),
         bodyText2: TextStyle(
-            color: Color(0xFF6F7789),
-            fontWeight: FontWeight.w300,
-            fontSize: 12),
+            color: Colors.black, fontWeight: FontWeight.w300, fontSize: 15),
         button: TextStyle(
             color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14),
       ),
-      primaryColor: const Color(0xFF04566E),
-      focusColor: const Color(0xFF04566E),
-      colorScheme: ColorScheme.fromSwatch(accentColor: const Color(0xFF04566E))
-          .copyWith(primary: const Color(0xFF04566E)));
+      primaryColor: appMainColor,
+      focusColor: appMainColor,
+      colorScheme: ColorScheme.fromSwatch(accentColor: appMainColor)
+          .copyWith(primary: appMainColor));
 }
