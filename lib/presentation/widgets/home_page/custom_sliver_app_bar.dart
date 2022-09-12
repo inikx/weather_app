@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:weather_app_friflex/bloc/weather/weather_bloc.dart';
 import 'package:weather_app_friflex/core/constants/strings.dart';
 import 'package:weather_app_friflex/core/utils/weather_preferences.dart';
 
 class CustomSliverAppBar extends StatefulWidget {
   final bool isShrink;
-  const CustomSliverAppBar({super.key, required this.isShrink});
+  final int temp;
+  const CustomSliverAppBar(
+      {super.key, required this.isShrink, required this.temp});
 
   @override
   State<CustomSliverAppBar> createState() => _CustomSliverAppBarState();
@@ -40,10 +44,8 @@ class _CustomSliverAppBarState extends State<CustomSliverAppBar> {
               ? Column(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    Text('20 * С',
+                    Text("${widget.temp} °",
                         style: Theme.of(context).textTheme.headline1),
-                    Text("Солнечно",
-                        style: Theme.of(context).textTheme.bodyText2)
                   ],
                 )
               : null),

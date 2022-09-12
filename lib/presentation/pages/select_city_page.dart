@@ -4,9 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:weather_app_friflex/bloc/geolocation/geolocation_bloc.dart';
-import 'package:weather_app_friflex/core/constants/locator.dart';
+import 'package:weather_app_friflex/core/utils/locator.dart';
 import 'package:weather_app_friflex/core/constants/strings.dart';
 import 'package:weather_app_friflex/core/utils/weather_preferences.dart';
 
@@ -27,17 +28,18 @@ class _SelectCityPageState extends State<SelectCityPage> {
       child: BlocBuilder<GeolocationBloc, GeolocationState>(
           builder: (context, state) {
         if (state is GeolocationLoadedState) {
-          return _getSelectCityPage(state.address);
+          return _getSelectCityPage(
+              state.address, state.position.latitude, state.position.longitude);
         } else if (state is GeolocationLoadingState) {
           return const CircularProgressIndicator();
         } else {
-          return _getSelectCityPage("");
+          return _getSelectCityPage("", 0, 0);
         }
       }),
     ));
   }
 
-  _getSelectCityPage(String address) {
+  _getSelectCityPage(String address, double lat, double lon) {
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.fromLTRB(15, 15, 15, 15),
@@ -51,18 +53,26 @@ class _SelectCityPageState extends State<SelectCityPage> {
                 setState(() {
                   _cityChanged = true;
                   _city = value;
-                  log(_city);
                 });
               },
-              initialValue: address,
+              initialValue: WeatherPreferences.getCity() != ""
+                  ? WeatherPreferences.getCity()
+                  : address,
             ),
             SizedBox(height: MediaQuery.of(context).size.height * 0.05),
             ElevatedButton(
                 onPressed: () async {
-                  _cityChanged
-                      ? WeatherPreferences.setCity(_city)
-                      : WeatherPreferences.setCity(address);
-                  log(_city);
+                  if (_cityChanged) {
+                    List<Location> locations =
+                        await locationFromAddress("$_city, Россия");
+                    WeatherPreferences.setLat(locations[0].latitude);
+                    WeatherPreferences.setLon(locations[0].longitude);
+                    WeatherPreferences.setCity(_city);
+                  } else {
+                    WeatherPreferences.setLat(lat);
+                    WeatherPreferences.setLon(lon);
+                    WeatherPreferences.setCity(address);
+                  }
                   Navigator.pushNamedAndRemoveUntil(
                       context, HOME, (route) => false);
                 },

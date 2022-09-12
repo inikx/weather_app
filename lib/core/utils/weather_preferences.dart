@@ -10,5 +10,17 @@ class WeatherPreferences {
     await _preferences!.setString("city", city);
   }
 
-  static String? getCity() => _preferences!.getString("city");
+  static Future<void> setLat(double lat) async {
+    await _preferences!.setDouble("lat", lat);
+  }
+
+  static Future<void> setLon(double lon) async {
+    await _preferences!.setDouble("lon", lon);
+  }
+
+  static String? getCity() => _preferences?.getString("city");
+
+  static double? getLat() => _preferences?.getDouble("lat");
+
+  static double? getLon() => _preferences?.getDouble("lon");
 }

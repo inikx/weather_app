@@ -38,7 +38,7 @@ class GeolocationRepository {
         });
       }
     } catch (e) {
-      log(e.toString());
+      throw Exception("Unknown exception");
     }
     return _currentLocation;
   }

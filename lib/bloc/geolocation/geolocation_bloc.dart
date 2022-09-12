@@ -25,14 +25,13 @@ class GeolocationBloc extends Bloc<GeolocationEvent, GeolocationState> {
               await _geolocationRepository.getCurrentLocation();
           List<Placemark> placemark = await placemarkFromCoordinates(
               position.latitude, position.longitude);
-          log(placemark.toString());
+          // log(placemark.toString());
           emit(GeolocationLoadedState(
               address: placemark[0].administrativeArea.toString(),
               position: position));
         }
       } catch (e) {
         emit(GeolocationErrorState());
-        log(e.toString());
       }
     });
   }

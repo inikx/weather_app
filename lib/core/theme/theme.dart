@@ -18,7 +18,7 @@ class Themes {
         bodyText1: TextStyle(
             color: appMainColor, fontWeight: FontWeight.w400, fontSize: 17),
         bodyText2: TextStyle(
-            color: Colors.black, fontWeight: FontWeight.w300, fontSize: 15),
+            color: Colors.black, fontWeight: FontWeight.w300, fontSize: 17),
         button: TextStyle(
             color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14),
       ),
