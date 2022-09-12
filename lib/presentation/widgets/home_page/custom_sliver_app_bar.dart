@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:weather_app_friflex/core/constants/strings.dart';
+import 'package:weather_app_friflex/core/utils/weather_preferences.dart';
 
 class CustomSliverAppBar extends StatefulWidget {
   final bool isShrink;
@@ -25,8 +26,8 @@ class _CustomSliverAppBarState extends State<CustomSliverAppBar> {
             },
             icon: Icon(Icons.location_city_rounded))
       ],
-      title:
-          Text("Санкт-Петербург", style: Theme.of(context).textTheme.headline1),
+      title: Text(WeatherPreferences.getCity()!,
+          style: Theme.of(context).textTheme.headline1),
       expandedHeight: 300.0,
       backgroundColor: Colors.white,
       flexibleSpace: FlexibleSpaceBar(

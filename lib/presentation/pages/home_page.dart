@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:weather_app_friflex/core/constants/strings.dart';
 import 'package:weather_app_friflex/presentation/widgets/home_page/custom_sliver_app_bar.dart';
 import 'package:weather_app_friflex/presentation/widgets/home_page/custom_sliver_grid.dart';
@@ -16,6 +17,7 @@ class _HomePageState extends State<HomePage> {
   late ScrollController _scrollController;
   bool lastStatus = true;
   double height = 50;
+  late SharedPreferences _preferences;
 
   void _scrollListener() {
     if (_isShrink != lastStatus) {
