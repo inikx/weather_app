@@ -1,6 +1,3 @@
-import 'dart:developer';
-//import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geocoding/geocoding.dart';
@@ -41,7 +38,7 @@ class _SelectCityPageState extends State<SelectCityPage> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text("Привет, выбери город!",
+          Text("Привет, введи город России!",
               style: Theme.of(context).textTheme.headline1),
           SizedBox(
             height: MediaQuery.of(context).size.height * 0.05,
@@ -80,22 +77,9 @@ class _SelectCityPageState extends State<SelectCityPage> {
           ElevatedButton(
               onPressed: () async {
                 try {
-                  //showCustomDialog(context, "Ошибка загрузки данных");
-                  // final snackBar = SnackBar(
-                  //   content: Text('Hii this is GFG\'s SnackBar'),
-                  //   backgroundColor: Colors.green,
-                  //   padding: EdgeInsets.only(bottom: 200),
-
-                  //   elevation: 10,
-                  //   behavior: SnackBarBehavior.floating,
-                  //   margin: EdgeInsets.all(5),
-                  // );
-                  //ScaffoldMessenger.of(context).showSnackBar(snackBar);
                   List<Location> locations = await locationFromAddress(
-                          "${_textEditingController.text}, Россия")
-                      .catchError((error) {
-                    log(error);
-                  });
+                      "${_textEditingController.text}, Россия");
+
                   WeatherPreferences.setLat(locations[0].latitude);
                   WeatherPreferences.setLon(locations[0].longitude);
                   WeatherPreferences.setCity(_textEditingController.text);
@@ -103,7 +87,14 @@ class _SelectCityPageState extends State<SelectCityPage> {
                   Navigator.pushNamedAndRemoveUntil(
                       context, HOME, (route) => false);
                 } catch (e) {
-                  log(e.toString());
+                  const snackBar = SnackBar(
+                    content: Text("Ошибка. Введённый город не найден."),
+                    backgroundColor: Colors.red,
+                    elevation: 10,
+                    behavior: SnackBarBehavior.floating,
+                    margin: EdgeInsets.all(5),
+                  );
+                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
                 }
               },
               child: const Text("Продолжить")),

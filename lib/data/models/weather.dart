@@ -1,6 +1,5 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first, non_constant_identifier_names
 import 'dart:convert';
-import 'dart:developer';
 
 class Weather {
   int temp;
@@ -13,6 +12,7 @@ class Weather {
   double wind_deg;
   double wind_gust;
   String icon;
+  DateTime dt_txt;
   Weather({
     required this.temp,
     required this.temp_feels_like,
@@ -24,6 +24,7 @@ class Weather {
     required this.wind_deg,
     required this.wind_gust,
     required this.icon,
+    required this.dt_txt,
   });
 
   Weather copyWith({
@@ -37,6 +38,7 @@ class Weather {
     double? wind_deg,
     double? wind_gust,
     String? icon,
+    DateTime? dt_txt,
   }) {
     return Weather(
       temp: temp ?? this.temp,
@@ -49,6 +51,7 @@ class Weather {
       wind_deg: wind_deg ?? this.wind_deg,
       wind_gust: wind_gust ?? this.wind_gust,
       icon: icon ?? this.icon,
+      dt_txt: dt_txt ?? this.dt_txt,
     );
   }
 
@@ -64,6 +67,7 @@ class Weather {
       'wind_deg': wind_deg,
       'wind_gust': wind_gust,
       'icon': icon,
+      'dt_txt': dt_txt.millisecondsSinceEpoch,
     };
   }
 
@@ -79,14 +83,13 @@ class Weather {
       wind_deg: map['wind_deg'] as double,
       wind_gust: map['wind_gust'] as double,
       icon: map['icon'] as String,
+      dt_txt: DateTime.fromMillisecondsSinceEpoch(map['dt_txt'] as int),
     );
   }
 
   String toJson() => json.encode(toMap());
 
   factory Weather.fromJson(Map<String, dynamic> json) {
-    log(json.toString());
-    log("http://openweathermap.org/img/wn/${json['weather'][0]['icon']}");
     return Weather(
         temp: (double.tryParse(json['main']['temp'].toString()) ?? 0).round(),
         temp_feels_like:
@@ -103,11 +106,13 @@ class Weather {
         wind_speed: double.tryParse(json['wind']['speed'].toString()) ?? 0,
         wind_deg: double.tryParse(json['wind']['deg'].toString()) ?? 0,
         wind_gust: double.tryParse(json['wind']['gust'].toString()) ?? 0,
-        icon: "assets/icons/${json['weather'][0]['icon']}.svg");
+        icon: "assets/icons/${json['weather'][0]['icon']}.svg",
+        dt_txt: DateTime.tryParse(json['dt_txt'].toString()) ?? DateTime.now());
   }
+
   @override
   String toString() {
-    return 'Weather(temp: $temp, temp_feels_like: $temp_feels_like, temp_min: $temp_min, temp_max: $temp_max, pressure: $pressure, humidity: $humidity, wind_speed: $wind_speed, wind_deg: $wind_deg, wind_gust: $wind_gust, icon: $icon)';
+    return 'Weather(temp: $temp, temp_feels_like: $temp_feels_like, temp_min: $temp_min, temp_max: $temp_max, pressure: $pressure, humidity: $humidity, wind_speed: $wind_speed, wind_deg: $wind_deg, wind_gust: $wind_gust, icon: $icon, dt_txt: $dt_txt)';
   }
 
   @override
@@ -123,7 +128,8 @@ class Weather {
         other.wind_speed == wind_speed &&
         other.wind_deg == wind_deg &&
         other.wind_gust == wind_gust &&
-        other.icon == icon;
+        other.icon == icon &&
+        other.dt_txt == dt_txt;
   }
 
   @override
@@ -137,6 +143,7 @@ class Weather {
         wind_speed.hashCode ^
         wind_deg.hashCode ^
         wind_gust.hashCode ^
-        icon.hashCode;
+        icon.hashCode ^
+        dt_txt.hashCode;
   }
 }

@@ -4,6 +4,7 @@ import 'package:weather_app_friflex/bloc/weather/weather_bloc.dart';
 import 'package:weather_app_friflex/core/constants/strings.dart';
 import 'package:weather_app_friflex/presentation/widgets/app_show_dialog.dart';
 import 'package:weather_app_friflex/presentation/widgets/home_page/custom_sliver_app_bar.dart';
+import 'package:weather_app_friflex/presentation/widgets/home_page/forecast/forecast_list.dart';
 import 'package:weather_app_friflex/presentation/widgets/home_page/weather_detailed_info_grid.dart';
 import 'package:weather_app_friflex/presentation/widgets/home_page/weather_main_info.dart';
 
@@ -34,6 +35,8 @@ class _HomePageState extends State<HomePage> {
                 child: WeatherMainInfo(
                     icon: state.loadedWeather.icon,
                     temp: state.loadedWeather.temp)),
+            SliverToBoxAdapter(
+                child: ForecastList(forecast: state.loadedWeatherForecast)),
             SliverToBoxAdapter(
                 child: WeatherDetailedInfoGrid(weather: state.loadedWeather))
           ]);

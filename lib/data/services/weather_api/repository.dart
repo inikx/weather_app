@@ -5,4 +5,7 @@ class WeatherRepository {
   final WeatherNetworkService _weatherNetworkService = WeatherNetworkService();
   Future<Weather> getCurrentWeather(double lat, double lon) async =>
       _weatherNetworkService.getCurrentWeather(lat, lon);
+
+  Future<List<Weather>> getWeatherForecast(double lat, double lon) async =>
+      _weatherNetworkService.getWeatherForecast(lat, lon);
 }

@@ -26,4 +26,26 @@ class WeatherNetworkService {
       throw Exception("No internet connection");
     }
   }
+
+  Future<List<Weather>> getWeatherForecast(double lat, double lon) async {
+    final String url =
+        "https://api.openweathermap.org/data/2.5/forecast?lat=$lat&lon=$lon&appid=$apiKey&units=metric";
+    try {
+      final response = await http.get(Uri.parse(url));
+      switch (response.statusCode) {
+        case 200:
+          return (json.decode(response.body)['list'] as List)
+              .map((json) => Weather.fromJson(json))
+              .toList();
+        case 401:
+          throw Exception("Invalid API key");
+        case 404:
+          throw Exception("Weather not found");
+        default:
+          throw Exception("Unknown exception");
+      }
+    } on SocketException catch (_) {
+      throw Exception("No internet connection");
+    }
+  }
 }

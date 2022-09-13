@@ -19,8 +19,11 @@ class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
         final double? lon = WeatherPreferences.getLon();
         final Weather loadedWeather =
             await _weatherRepository.getCurrentWeather(lat!, lon!);
-        //log(loadedWeather.toString());
-        emit(WeatherLoadedState(loadedWeather: loadedWeather));
+        final List<Weather> loadedWeatherForecast =
+            await _weatherRepository.getWeatherForecast(lat, lon);
+        emit(WeatherLoadedState(
+            loadedWeatherForecast: loadedWeatherForecast,
+            loadedWeather: loadedWeather));
       } catch (e) {
         emit(WeatherErrorState());
       }
