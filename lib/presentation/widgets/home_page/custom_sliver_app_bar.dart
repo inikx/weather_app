@@ -8,6 +8,7 @@ class CustomSliverAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SliverAppBar(
+      centerTitle: true,
       elevation: 3,
       pinned: true,
       actions: [

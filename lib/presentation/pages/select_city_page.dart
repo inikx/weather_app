@@ -38,7 +38,7 @@ class _SelectCityPageState extends State<SelectCityPage> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text("Привет, введи город России!",
+          Text("Привет, введи город!",
               style: Theme.of(context).textTheme.headline1),
           SizedBox(
             height: MediaQuery.of(context).size.height * 0.05,
@@ -47,6 +47,7 @@ class _SelectCityPageState extends State<SelectCityPage> {
             children: [
               Expanded(
                   child: TextField(
+                      textCapitalization: TextCapitalization.words,
                       controller: _textEditingController,
                       cursorColor: appMainColor,
                       decoration: const InputDecoration().applyDefaults(
@@ -76,9 +77,20 @@ class _SelectCityPageState extends State<SelectCityPage> {
           ),
           ElevatedButton(
               onPressed: () async {
+                const snackBar = SnackBar(
+                  content: Text("Ошибка. Введённый город не найден."),
+                  backgroundColor: Colors.red,
+                  elevation: 10,
+                  behavior: SnackBarBehavior.floating,
+                  margin: EdgeInsets.all(5),
+                );
                 try {
+                  if (_textEditingController.text.isEmpty) {
+                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                    return;
+                  }
                   List<Location> locations = await locationFromAddress(
-                      "${_textEditingController.text}, Россия");
+                      "${_textEditingController.text}");
 
                   WeatherPreferences.setLat(locations[0].latitude);
                   WeatherPreferences.setLon(locations[0].longitude);
@@ -87,13 +99,6 @@ class _SelectCityPageState extends State<SelectCityPage> {
                   Navigator.pushNamedAndRemoveUntil(
                       context, HOME, (route) => false);
                 } catch (e) {
-                  const snackBar = SnackBar(
-                    content: Text("Ошибка. Введённый город не найден."),
-                    backgroundColor: Colors.red,
-                    elevation: 10,
-                    behavior: SnackBarBehavior.floating,
-                    margin: EdgeInsets.all(5),
-                  );
                   ScaffoldMessenger.of(context).showSnackBar(snackBar);
                 }
               },
