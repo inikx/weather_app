@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:weather_app_friflex/core/utils/locator.dart';
 import 'package:weather_app_friflex/core/constants/strings.dart';
 import 'package:weather_app_friflex/core/theme/theme.dart';
@@ -10,6 +11,10 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   setupLocator();
   await WeatherPreferences.initPreferences();
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
   runApp(WeatherApp(router: AppRouter()));
 }
 
