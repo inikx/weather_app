@@ -1,11 +1,11 @@
+// ignore_for_file: depend_on_referenced_packages
+
 import 'dart:async';
-import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:meta/meta.dart';
 import 'package:weather_app_friflex/data/services/geolocation/repository.dart';
 
 part 'geolocation_event.dart';

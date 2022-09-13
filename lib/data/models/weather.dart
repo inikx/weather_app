@@ -1,4 +1,4 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
+// ignore_for_file: public_member_api_docs, sort_constructors_first, non_constant_identifier_names
 import 'dart:convert';
 import 'dart:developer';
 
@@ -12,7 +12,7 @@ class Weather {
   double wind_speed;
   double wind_deg;
   double wind_gust;
-  //String icon;
+  String icon;
   Weather({
     required this.temp,
     required this.temp_feels_like,
@@ -23,7 +23,7 @@ class Weather {
     required this.wind_speed,
     required this.wind_deg,
     required this.wind_gust,
-    //required this.icon,
+    required this.icon,
   });
 
   Weather copyWith({
@@ -36,7 +36,7 @@ class Weather {
     double? wind_speed,
     double? wind_deg,
     double? wind_gust,
-    //String? icon,
+    String? icon,
   }) {
     return Weather(
       temp: temp ?? this.temp,
@@ -48,7 +48,7 @@ class Weather {
       wind_speed: wind_speed ?? this.wind_speed,
       wind_deg: wind_deg ?? this.wind_deg,
       wind_gust: wind_gust ?? this.wind_gust,
-      // icon: icon ?? this.icon,
+      icon: icon ?? this.icon,
     );
   }
 
@@ -63,7 +63,7 @@ class Weather {
       'wind_speed': wind_speed,
       'wind_deg': wind_deg,
       'wind_gust': wind_gust,
-      // 'icon': icon,
+      'icon': icon,
     };
   }
 
@@ -78,35 +78,36 @@ class Weather {
       wind_speed: map['wind_speed'] as double,
       wind_deg: map['wind_deg'] as double,
       wind_gust: map['wind_gust'] as double,
-      //icon: map['icon'] as String,
+      icon: map['icon'] as String,
     );
   }
 
   String toJson() => json.encode(toMap());
 
   factory Weather.fromJson(Map<String, dynamic> json) {
-    //log(json.toString());
+    log(json.toString());
+    log("http://openweathermap.org/img/wn/${json['weather'][0]['icon']}");
     return Weather(
-      temp: (double.tryParse(json['main']['temp'].toString()) ?? 0).round(),
-      temp_feels_like:
-          (double.tryParse(json['main']['feels_like'].toString()) ?? 0).round(),
-      temp_min:
-          (double.tryParse(json['main']['temp_min'].toString()) ?? 0).round(),
-      temp_max:
-          (double.tryParse(json['main']['temp_max'].toString()) ?? 0).round(),
-      pressure:
-          (double.tryParse(json['main']['pressure'].toString()) ?? 0).round(),
-      humidity:
-          (double.tryParse(json['main']['humidity'].toString()) ?? 0).round(),
-      wind_speed: double.tryParse(json['wind']['speed'].toString()) ?? 0,
-      wind_deg: double.tryParse(json['wind']['deg'].toString()) ?? 0,
-      wind_gust: double.tryParse(json['wind']['gust'].toString()) ?? 0,
-      //icon: json['weather']['icon'] ?? "",
-    );
+        temp: (double.tryParse(json['main']['temp'].toString()) ?? 0).round(),
+        temp_feels_like:
+            (double.tryParse(json['main']['feels_like'].toString()) ?? 0)
+                .round(),
+        temp_min:
+            (double.tryParse(json['main']['temp_min'].toString()) ?? 0).round(),
+        temp_max:
+            (double.tryParse(json['main']['temp_max'].toString()) ?? 0).round(),
+        pressure:
+            (double.tryParse(json['main']['pressure'].toString()) ?? 0).round(),
+        humidity:
+            (double.tryParse(json['main']['humidity'].toString()) ?? 0).round(),
+        wind_speed: double.tryParse(json['wind']['speed'].toString()) ?? 0,
+        wind_deg: double.tryParse(json['wind']['deg'].toString()) ?? 0,
+        wind_gust: double.tryParse(json['wind']['gust'].toString()) ?? 0,
+        icon: "assets/icons/${json['weather'][0]['icon']}.svg");
   }
   @override
   String toString() {
-    return 'Weather(temp: $temp, temp_feels_like: $temp_feels_like, temp_min: $temp_min, temp_max: $temp_max, pressure: $pressure, humidity: $humidity, wind_speed: $wind_speed, wind_deg: $wind_deg, wind_gust: $wind_gust)';
+    return 'Weather(temp: $temp, temp_feels_like: $temp_feels_like, temp_min: $temp_min, temp_max: $temp_max, pressure: $pressure, humidity: $humidity, wind_speed: $wind_speed, wind_deg: $wind_deg, wind_gust: $wind_gust, icon: $icon)';
   }
 
   @override
@@ -121,8 +122,8 @@ class Weather {
         other.humidity == humidity &&
         other.wind_speed == wind_speed &&
         other.wind_deg == wind_deg &&
-        other.wind_gust == wind_gust;
-    // other.icon == icon;
+        other.wind_gust == wind_gust &&
+        other.icon == icon;
   }
 
   @override
@@ -135,7 +136,7 @@ class Weather {
         humidity.hashCode ^
         wind_speed.hashCode ^
         wind_deg.hashCode ^
-        wind_gust.hashCode;
-    //  icon.hashCode;
+        wind_gust.hashCode ^
+        icon.hashCode;
   }
 }

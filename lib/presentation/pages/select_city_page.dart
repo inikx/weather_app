@@ -1,13 +1,11 @@
 import 'dart:developer';
+//import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geocoding/geocoding.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:weather_app_friflex/bloc/geolocation/geolocation_bloc.dart';
-import 'package:weather_app_friflex/core/utils/locator.dart';
+import 'package:weather_app_friflex/core/theme/colors.dart';
 import 'package:weather_app_friflex/core/constants/strings.dart';
 import 'package:weather_app_friflex/core/utils/weather_preferences.dart';
 
@@ -19,69 +17,98 @@ class SelectCityPage extends StatefulWidget {
 }
 
 class _SelectCityPageState extends State<SelectCityPage> {
-  String _city = "";
-  bool _cityChanged = false;
+  late TextEditingController _textEditingController;
+
+  @override
+  void initState() {
+    _textEditingController =
+        TextEditingController(text: WeatherPreferences.getCity() ?? "");
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _textEditingController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: Center(
-      child: BlocBuilder<GeolocationBloc, GeolocationState>(
-          builder: (context, state) {
-        if (state is GeolocationLoadedState) {
-          return _getSelectCityPage(
-              state.address, state.position.latitude, state.position.longitude);
-        } else if (state is GeolocationLoadingState) {
-          return const CircularProgressIndicator();
-        } else {
-          return _getSelectCityPage("", 0, 0);
-        }
-      }),
-    ));
-  }
-
-  _getSelectCityPage(String address, double lat, double lon) {
-    return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(15, 15, 15, 15),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text("Привет, выбери город!",
-                style: Theme.of(context).textTheme.headline1),
-            TextFormField(
-              onChanged: (value) {
-                setState(() {
-                  _cityChanged = true;
-                  _city = value;
-                });
-              },
-              initialValue: WeatherPreferences.getCity() != ""
-                  ? WeatherPreferences.getCity()
-                  : address,
-            ),
-            SizedBox(height: MediaQuery.of(context).size.height * 0.05),
-            ElevatedButton(
-                onPressed: () async {
-                  if (_cityChanged) {
-                    List<Location> locations =
-                        await locationFromAddress("$_city, Россия");
-                    WeatherPreferences.setLat(locations[0].latitude);
-                    WeatherPreferences.setLon(locations[0].longitude);
-                    WeatherPreferences.setCity(_city);
+    return Scaffold(
+        body: SafeArea(
+            child: Padding(
+      padding: const EdgeInsets.fromLTRB(15, 0, 15, 0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text("Привет, выбери город!",
+              style: Theme.of(context).textTheme.headline1),
+          SizedBox(
+            height: MediaQuery.of(context).size.height * 0.05,
+          ),
+          Row(
+            children: [
+              Expanded(
+                  child: TextField(
+                      controller: _textEditingController,
+                      cursorColor: appMainColor,
+                      decoration: const InputDecoration().applyDefaults(
+                          Theme.of(context).inputDecorationTheme))),
+              SizedBox(width: MediaQuery.of(context).size.width * 0.04),
+              BlocBuilder<GeolocationBloc, GeolocationState>(
+                builder: (context, state) {
+                  if (state is GeolocationLoadedState) {
+                    return ElevatedButton(
+                        onPressed: () async {
+                          setState(() {
+                            _textEditingController.text = state.address;
+                          });
+                        },
+                        child: const Text("Где я?"));
+                  } else if (state is GeolocationLoadingState) {
+                    return const CircularProgressIndicator();
                   } else {
-                    WeatherPreferences.setLat(lat);
-                    WeatherPreferences.setLon(lon);
-                    WeatherPreferences.setCity(address);
+                    return Container();
                   }
+                },
+              ),
+            ],
+          ),
+          SizedBox(
+            height: MediaQuery.of(context).size.height * 0.05,
+          ),
+          ElevatedButton(
+              onPressed: () async {
+                try {
+                  //showCustomDialog(context, "Ошибка загрузки данных");
+                  // final snackBar = SnackBar(
+                  //   content: Text('Hii this is GFG\'s SnackBar'),
+                  //   backgroundColor: Colors.green,
+                  //   padding: EdgeInsets.only(bottom: 200),
+
+                  //   elevation: 10,
+                  //   behavior: SnackBarBehavior.floating,
+                  //   margin: EdgeInsets.all(5),
+                  // );
+                  //ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                  List<Location> locations = await locationFromAddress(
+                          "${_textEditingController.text}, Россия")
+                      .catchError((error) {
+                    log(error);
+                  });
+                  WeatherPreferences.setLat(locations[0].latitude);
+                  WeatherPreferences.setLon(locations[0].longitude);
+                  WeatherPreferences.setCity(_textEditingController.text);
+
                   Navigator.pushNamedAndRemoveUntil(
                       context, HOME, (route) => false);
-                },
-                child: Container(
-                  child: Text("Продолжить"),
-                ))
-          ],
-        ),
+                } catch (e) {
+                  log(e.toString());
+                }
+              },
+              child: const Text("Продолжить")),
+        ],
       ),
-    );
+    )));
   }
 }

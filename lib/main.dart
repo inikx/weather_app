@@ -5,10 +5,10 @@ import 'package:weather_app_friflex/core/theme/theme.dart';
 import 'package:weather_app_friflex/core/utils/weather_preferences.dart';
 import 'package:weather_app_friflex/route.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   setupLocator();
-  WeatherPreferences.initPreferences();
+  await WeatherPreferences.initPreferences();
   runApp(WeatherApp(router: AppRouter()));
 }
 
